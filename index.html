@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ちびキャラボクシング～パズル編～</title>
+  <meta name="theme-color" content="#1d1830">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/extensions.css">
+</head>
+<body data-screen="title">
+<p id="test-save-note" class="test-save-note" hidden>検証用の保存領域で実行中です。通常のセーブには保存しません。</p>
+
+<!-- タイトル -->
+<section class="screen screen-title" id="screen-title">
+  <div class="title-lights" aria-hidden="true"></div>
+  <h1 class="logo"><span class="logo-sm">オリキャラ対戦</span><span class="logo-a">ちびキャラボクシング</span><span class="logo-b">～パズル編～</span></h1>
+  <div class="title-apron">
+    <div class="title-lineup" id="title-lineup"></div>
+    <div class="ropes" aria-hidden="true"><i></i><i></i><i></i></div>
+  </div>
+  <div class="title-actions">
+    <button class="btn btn-gong" id="btn-arcade" type="button">勝ち抜き<small>5人と連戦</small></button>
+    <button class="btn btn-gong" id="btn-play" type="button">対戦<small>相手を選ぶ</small></button>
+    <div class="title-sub">
+      <button class="btn btn-ghost" type="button" data-open-howto>あそびかた</button>
+      <button class="btn btn-ghost" type="button" data-open-options>オプション</button>
+      <button class="btn btn-ghost" type="button" data-open-custom>オリジナルキャラ登録</button>
+      <button class="btn btn-ghost" id="btn-gallery" type="button">ギャラリー</button>
+    </div>
+  </div>
+</section>
+
+<!-- キャラ選択 -->
+<section class="screen screen-select" id="screen-select" hidden>
+  <header class="select-head">
+    <button class="btn-icon" id="btn-back-title" type="button" aria-label="タイトルへ戻る">←</button>
+    <h2 id="select-title">対戦カード</h2>
+    <button class="btn btn-ghost btn-sm" type="button" data-open-howto>あそびかた</button>
+  </header>
+  <div class="matchup">
+    <button class="slot slot-p" id="slot-p" data-slot="p" type="button"><span class="slot-label">赤コーナー・あなた</span><span class="slot-face"></span></button>
+    <span class="vs">VS</span>
+    <button class="slot slot-e" id="slot-e" data-slot="e" type="button"><span class="slot-label">青コーナー・相手</span><span class="slot-face"></span></button>
+  </div>
+  <p class="select-hint" id="select-hint" aria-live="polite"></p>
+  <p class="pov-hint" id="arcade-hint" hidden>勝ち抜き：5人と続けて戦います。前座のモブ2人のあと、名前のあるキャラ3人が相手。負けてもコンティニューで同じ相手とやり直せます。</p>
+  <p class="pov-hint" id="pov-hint" hidden>1人称：相手がこちらを向いて殴ってきます。正面の絵がまだないキャラは、横向きの絵で代用します。視点は「オプション」で切り替えられます。</p>
+  <div class="char-grid" id="char-grid"></div>
+  <button class="btn btn-ghost btn-sm" type="button" data-open-custom>オリジナルキャラを追加・編集</button>
+  <div class="select-foot">
+    <button class="btn btn-ghost btn-sm" id="btn-random" type="button">相手はおまかせ</button>
+    <button class="btn btn-ghost btn-sm btn-opt" type="button" data-open-options>オプション<small id="opt-summary"></small></button>
+    <fieldset class="diff">
+      <legend>相手の強さ</legend>
+      <label><input type="radio" name="diff" value="easy"><span>やさしい</span></label>
+      <label><input type="radio" name="diff" value="normal"><span>ふつう</span></label>
+      <label><input type="radio" name="diff" value="hard"><span>つよい</span></label>
+    </fieldset>
+    <button class="btn btn-gong" id="btn-gong" type="button">ゴング！</button>
+  </div>
+</section>
+
+<!-- ギャラリー（勝ち抜きをそのキャラで5人抜きすると、そのキャラの試合のポーズが見られる） -->
+<section class="screen screen-gallery" id="screen-gallery" hidden>
+  <header class="select-head">
+    <button class="btn-icon" id="btn-gallery-back" type="button" aria-label="タイトルへ戻る">←</button>
+    <h2>ギャラリー</h2>
+  </header>
+  <p class="gallery-note">勝ち抜きを、そのキャラで5人抜きすると、そのキャラの試合のポーズが見られるようになります。</p>
+  <div class="gallery-chars" id="gallery-chars"></div>
+  <p class="gallery-empty" id="gallery-empty">まだ見られるキャラがいません。まずは勝ち抜きで5人抜きをめざしましょう。</p>
+  <h3 class="gallery-name" id="gallery-name"></h3>
+  <div class="gallery-poses" id="gallery-poses" hidden></div>
+</section>
+
+<!-- 試合前。ここでは戦闘のtimer・盤面入力を開始しない。 -->
+<section class="screen screen-dialogue" id="screen-dialogue" hidden tabindex="-1" aria-label="試合前の掛け合い">
+  <header class="select-head"><h2>試合前のひととき</h2><button class="btn btn-ghost btn-sm" data-dialogue-skip type="button">スキップ</button></header>
+  <div class="dialogue-stage">
+    <figure data-dialogue-side="p"><img alt="" draggable="false"><figcaption></figcaption></figure>
+    <span class="vs" aria-hidden="true">VS</span>
+    <figure data-dialogue-side="e"><img alt="" draggable="false"><figcaption></figcaption></figure>
+  </div>
+  <div class="dialogue-text" aria-live="polite"><b class="dialogue-speaker"></b><p class="dialogue-line"></p></div>
+  <div class="dialogue-controls"><span class="dialogue-page"></span><small>本文クリック／Enter／Spaceで次へ</small><button class="btn btn-gong btn-sm" data-dialogue-next type="button">次へ</button></div>
+</section>
+
+<!-- 試合 -->
+<section class="screen screen-fight" id="screen-fight" hidden>
+  <div class="fight-main">
+    <header class="hud">
+      <div class="hud-side hud-p" id="hud-p">
+        <div class="hud-name"><b class="nm"></b><span class="st"></span></div>
+        <div class="hp"><div class="hp-trail"></div><div class="hp-fill"></div></div>
+        <div class="downs" aria-label="ダウン回数"><i></i><i></i><i></i></div>
+      </div>
+      <div class="hud-mid"><div class="round" id="hud-round">R1</div><div class="clock" id="hud-clock">1:00</div><button class="btn-pause" id="btn-pause" type="button" aria-label="一時停止"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1.5"/><rect x="14" y="5" width="4" height="14" rx="1.5"/></svg></button></div>
+      <div class="hud-side hud-e" id="hud-e">
+        <div class="hud-name"><b class="nm"></b><span class="st"></span></div>
+        <div class="hp"><div class="hp-trail"></div><div class="hp-fill"></div></div>
+        <div class="downs" aria-label="ダウン回数"><i></i><i></i><i></i></div>
+      </div>
+    </header>
+
+    <div class="ring" id="ring">
+      <div class="ring-crowd" aria-hidden="true"></div>
+      <div class="ring-floor" aria-hidden="true"></div>
+      <div class="ring-post post-l" aria-hidden="true"></div>
+      <div class="ring-post post-r" aria-hidden="true"></div>
+      <div class="ropes ring-ropes" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="fighter fighter-p" id="f-p"><div class="fighter-body"><img alt="" draggable="false"></div></div>
+      <div class="fighter fighter-e" id="f-e"><div class="fighter-body"><img alt="" draggable="false"></div></div>
+      <div class="tele" id="tele" hidden>
+        <svg class="tele-timer" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17" pathLength="100"/></svg>
+        <div class="tele-token token"></div>
+        <div class="tele-num"></div>
+      </div>
+      <div class="pov-gloves" id="pov-gloves" hidden aria-hidden="true"><div class="glove glove-l"></div><div class="glove glove-r"></div></div>
+      <p class="pov-note" id="pov-note" hidden>正面の絵がまだないので、横向きの絵で代用しています</p>
+      <div class="stopfx" id="stopfx" hidden aria-hidden="true"></div>
+      <div class="bubble bubble-p" id="bubble-p" hidden></div>
+      <div class="bubble bubble-e" id="bubble-e" hidden></div>
+      <div class="fx" id="fx" aria-hidden="true"></div>
+      <div class="count" id="count" hidden></div>
+      <div class="cutin" id="cutin" hidden aria-live="assertive">
+        <div class="cutin-band"><img alt="" draggable="false"><p class="cutin-text"><small class="cutin-who"></small><b class="cutin-name"></b></p></div>
+      </div>
+      <div class="banner" id="banner" aria-live="assertive"></div>
+    </div>
+  </div>
+
+  <div class="fight-side">
+    <div class="strip-wrap">
+      <div class="strip" id="strip" aria-live="polite"></div>
+      <button class="skill" id="btn-skill" type="button" disabled aria-label="スキルを使う">
+        <span class="sk-fill" aria-hidden="true"></span>
+        <span class="sk-label">スキル</span><span class="sk-name"></span><span class="sk-state"></span>
+      </button>
+    </div>
+    <div class="board" id="board">
+      <div class="board-tokens"></div>
+      <svg class="board-line" aria-hidden="true"></svg>
+      <div class="board-count" hidden></div>
+    </div>
+    <div class="interval" id="interval" hidden aria-live="polite">
+      <h3 class="iv-title">インターバル</h3>
+      <p class="iv-round"></p>
+      <table class="result-table iv-table"></table>
+      <p class="iv-lead"></p>
+      <p class="iv-tip"></p>
+      <button class="btn btn-gong btn-sm iv-next" type="button">次のラウンドへ<small class="iv-sec"></small></button>
+    </div>
+  </div>
+</section>
+
+<!-- あそびかた -->
+<dialog class="dlg" id="dlg-howto" aria-labelledby="howto-title">
+  <h2 id="howto-title">あそびかた</h2>
+  <ol class="howto">
+    <li><span class="howto-ic">1</span><div><b>なぞって攻撃</b><p>同じパンチのアイコンを指（マウス）でなぞって、<b>3つ以上</b>つなぐと攻撃。斜めにもつながる。長くつなぐほど強い。★はどのアイコンの代わりにもなる。</p></div></li>
+    <li><span class="howto-ic">2</span><div><b>予告をガード</b><p>相手の頭の上に「パンチ×数」が出たら、時間内に<b>同じアイコンをその数だけ</b>消すとガード。何回に分けて消してもいい。</p></div></li>
+    <li><span class="howto-ic">3</span><div><b>2倍でカウンター</b><p>必要な数の<b>2倍</b>まで消すと、その場でカウンター。足りないと被弾するけど、消した分だけダメージは減る。</p></div></li>
+    <li><span class="howto-ic">4</span><div><b>得意・苦手とスキル</b><p>キャラごとに<b>得意パンチ</b>（打つと強い）と<b>苦手パンチ</b>（打たれると痛い）がある。得意パンチを消すとスキルのゲージがたまり（椿・チコはカウンターとガード）、満タンで盤面の上の「スキル」ボタンを押すと発動。オプションで「自動」にすると、満タンになったら勝手に発動する。</p></div></li>
+    <li><span class="howto-ic">5</span><div><b>ダウンと判定</b><p>体力が0でダウン。カウント中に決められた数を消せば立ち上がれる。3ダウンでTKO。ラウンドの間はインターバル（体力が少し回復）。3ラウンド終わったら与えたダメージで判定。</p></div></li>
+  </ol>
+  <p class="howto-note">キャラごとの得意・苦手パンチとスキルは、選択画面のカードに書いてあります。「勝ち抜き」は5人と続けて戦うモードで、負けてもコンティニューできます。視点（3人称・1人称）とスキルの自動発動は「オプション」で切り替えられます。</p>
+  <button class="btn btn-gong btn-sm" type="button" data-close>わかった</button>
+</dialog>
+
+<dialog class="dlg" id="dlg-pause" aria-labelledby="pause-title">
+  <h2 id="pause-title">一時停止中</h2>
+  <div class="dlg-actions">
+    <button class="btn btn-gong btn-sm" id="btn-resume" type="button">つづける</button>
+    <button class="btn btn-ghost btn-sm" type="button" data-sound aria-pressed="true"><span>音オン</span></button>
+    <button class="btn btn-ghost btn-sm" type="button" data-open-options>オプション</button>
+    <button class="btn btn-ghost btn-sm" id="btn-quit" type="button">試合をやめる</button>
+  </div>
+</dialog>
+
+<dialog class="dlg dlg-options" id="dlg-options" aria-labelledby="options-title">
+  <h2 id="options-title">オプション</h2>
+  <div class="opts">
+    <fieldset class="diff opt">
+      <legend>視点</legend>
+      <label><input type="radio" name="view" value="side"><span>3人称<small>横から見る</small></span></label>
+      <label><input type="radio" name="view" value="pov"><span>1人称<small>相手が正面</small></span></label>
+    </fieldset>
+    <fieldset class="diff opt">
+      <legend>スキル（必殺技）の発動</legend>
+      <label><input type="radio" name="skillmode" value="manual"><span>ボタンで<small>自分で押す</small></span></label>
+      <label><input type="radio" name="skillmode" value="auto"><span>自動<small>満タンで発動</small></span></label>
+    </fieldset>
+    <fieldset class="opt-volume">
+      <legend>音量</legend>
+      <label><span>曲</span><input type="range" id="opt-vol-bgm" min="0" max="100" step="5"><output id="opt-vol-bgm-out"></output></label>
+      <label><span>効果音</span><input type="range" id="opt-vol-se" min="0" max="100" step="5"><output id="opt-vol-se-out"></output></label>
+      <small>音オン／オフのボタンは、曲と効果音の両方に効きます。</small>
+    </fieldset>
+  </div>
+  <p class="opt-note" id="opt-note" hidden>視点は次の試合から変わります（スキルの発動はすぐ切り替わります）</p>
+  <div class="dlg-actions"><button class="btn btn-gong btn-sm" type="button" data-close>OK</button></div>
+</dialog>
+
+<dialog class="dlg dlg-gallery" id="dlg-gallery" aria-label="ギャラリーの絵">
+  <figure class="gallery-view"><img alt="" draggable="false"><figcaption></figcaption></figure>
+  <div class="dlg-actions">
+    <button class="btn btn-ghost btn-sm" data-gallery-prev type="button">← 前</button>
+    <button class="btn btn-ghost btn-sm" data-gallery-next type="button">次 →</button>
+    <button class="btn btn-gong btn-sm" data-gallery-close type="button">閉じる</button>
+  </div>
+</dialog>
+
+<dialog class="dlg dlg-result" id="dlg-result" aria-labelledby="result-title">
+  <figure class="result-fig" id="result-fig-e"><img alt=""><figcaption></figcaption></figure>
+  <figure class="result-fig" id="result-fig-p"><img alt=""><figcaption></figcaption></figure>
+  <h2 id="result-title"></h2>
+  <p class="result-sub" id="result-sub"></p>
+  <p class="result-arcade" id="result-arcade" hidden></p>
+  <p class="result-unlock" id="result-unlock" hidden></p>
+  <table class="result-table" id="result-table"></table>
+  <div class="dlg-actions">
+    <button class="btn btn-gong btn-sm" id="btn-again" type="button">もう一戦</button>
+    <button class="btn btn-ghost btn-sm" id="btn-reselect" type="button">キャラを選びなおす</button>
+  </div>
+</dialog>
+
+<dialog class="dlg dlg-ladder" id="dlg-ladder" aria-labelledby="ladder-name">
+  <p class="ladder-stage" id="ladder-stage"></p>
+  <div class="ladder-vs"><img id="ladder-p" alt=""><span>VS</span><img id="ladder-e" alt="" class="is-flip"></div>
+  <h2 id="ladder-name"></h2>
+  <ol class="ladder-list" id="ladder-list" aria-label="勝ち抜きの相手"></ol>
+  <div class="dlg-actions">
+    <button class="btn btn-gong btn-sm" id="btn-ladder-go" type="button">ゴング！</button>
+    <button class="btn btn-ghost btn-sm" id="btn-ladder-quit" type="button">やめる</button>
+  </div>
+</dialog>
+
+<dialog class="dlg dlg-custom" id="dlg-custom" aria-labelledby="custom-title">
+  <header class="custom-head"><h2 id="custom-title">オリジナルキャラ登録</h2><button id="custom-close" class="btn btn-ghost btn-sm" type="button">閉じる</button></header>
+  <p>自分用のキャラを20人まで追加できます。既存の6人・モブの設定と画像は変更しません。</p>
+  <p id="custom-status" class="custom-status" role="status" aria-live="polite"></p>
+  <div class="custom-tools"><label>編集するキャラ<select id="custom-pick"></select></label><button id="custom-new" class="btn btn-ghost btn-sm" type="button">新しく作る</button></div>
+  <form id="custom-form">
+    <fieldset class="custom-fields"><legend>名前とカラー</legend>
+      <label>名前（必須・40文字まで）<input name="name" maxlength="40" required></label>
+      <label>表示名（任意・30文字まで）<input name="nick" maxlength="30" placeholder="空欄なら名前を表示"></label>
+      <label>キャラカラー<input name="theme" type="color" value="#53b7d4"></label>
+    </fieldset>
+    <fieldset class="custom-fields"><legend>能力とスキル</legend>
+      <p class="custom-wide custom-points" id="custom-points" role="status">能力ポイント 0 ／ 10</p>
+      <p class="custom-wide">能力は合計10点まで。最大体力+10、攻撃倍率+0.05、CPU攻撃間隔−0.05ごとに1点です（端数は切り上げ）。初期値より弱くしても点数は戻りません。</p>
+      <label>最大体力：60〜160（初期100）<input name="hp" type="number" min="60" max="160" step="1" required></label>
+      <label>攻撃倍率：0.5〜1.5（初期1）<input name="power" type="number" min="0.5" max="1.5" step="0.05" required></label>
+      <label>CPU攻撃間隔：0.65〜1.5（初期1・小さいほど速い）<input name="interval" type="number" min="0.65" max="1.5" step="0.05" required></label>
+      <label>得意パンチ（初期ジャブ）<select name="fav"></select></label><label>苦手パンチ（初期ボディ）<select name="weak"></select></label>
+      <label class="custom-wide">スキル効果（初期：得意パンチ強化）<select name="skillType"></select></label>
+      <label>スキル名（40文字まで）<input name="skillName" maxlength="40"></label>
+      <p class="custom-wide">スキルは自分で操作するときに使用。得意パンチ強化・つなぎ短縮は得意パンチ消去、カウンター強化はガード／カウンターでゲージがたまります。</p>
+    </fieldset>
+    <fieldset class="custom-fields"><legend>試合前のひとこと</legend>
+      <label class="custom-wide">汎用のセリフ（240文字まで・空欄可）<textarea name="intro" maxlength="240" rows="3" placeholder="例：よろしくお願いします。"></textarea></label>
+      <label>このセリフの表情<select name="introExpression"></select></label>
+      <p class="custom-wide">このキャラが話すひとことです。左右が入れ替わっても同じ本人が話します。</p>
+    </fieldset>
+    <fieldset><legend>画像スロット</legend>
+      <p>必須は横向きの「構え」1枚だけです（簡易版はこれだけで遊べます）。他の枠はすべて任意で、埋めた分だけ各場面で使われます。</p>
+      <p>PNG・JPEG・WebP／1枚3MiB以下／縦横64〜2048px。透過PNG・WebP推奨。保存量は全キャラ合計32MiBまで。</p>
+      <p>横向きは右向きの全身を基本に、1000×600の同じ位置・頭サイズで揃えると安定します。各スロットで元絵の向きも選べます。正面は1人称の相手用、表情は掛け合い用です。</p>
+      <p>不足分は同じキャラの構え・通常表情、最後に共通シルエットで代用します。大の字ダウン（KO結果用）は正方形、コーナーはポストを含めても人物の大きさを維持してください。</p>
+      <div id="custom-images"></div>
+    </fieldset>
+    <div class="custom-save"><button class="btn btn-gong btn-sm" type="submit">保存して登録</button><button id="custom-delete" class="btn btn-ghost btn-sm" type="button">このキャラを削除</button></div>
+  </form>
+  <fieldset class="custom-backup"><legend>画像込みバックアップ</legend>
+    <p>保存先はこのブラウザ・起動場所ごとに異なります。ブラウザデータ削除や別PCへの移動に備え、JSONを書き出してください。読み込みは追加方式で、同じIDも別キャラとして残します。</p>
+    <div class="custom-tools"><button id="custom-export" class="btn btn-ghost btn-sm" type="button">全キャラを書き出す</button><label>バックアップを追加読み込み<input id="custom-import" type="file" accept=".json,application/json"></label><button id="custom-restore" class="btn btn-ghost btn-sm" type="button">直前の変更を戻す</button></div>
+  </fieldset>
+</dialog>
+
+<script src="js/data.js"></script>
+<script src="js/pov_manifest.js"></script>
+<script src="js/mob_manifest.js"></script>
+<script src="js/rest_manifest.js"></script>
+<script src="js/body_down_manifest.js"></script>
+<script src="js/special_manifest.js"></script>
+<script src="js/custom.js"></script>
+<script src="js/appearance.js"></script>
+<script src="js/dialogue_data.js"></script>
+<script>
+if (new URLSearchParams(window.location.search).get('dev') === '1') {
+  // 既存devパネルの適用より前に、空欄保存で戻す正本の値を確保する。
+  CBP.DEV_OVERRIDE_ORIGINALS = Object.fromEntries([...CBP.CHARS, ...CBP.MOBS].map(c => [c.id,
+    { skillName: c.skill?.name, lines: JSON.parse(JSON.stringify(c.lines || {})) }]));
+}
+</script>
+<script src="js/dev_dialogue.js"></script>
+<script src="js/dev_overrides.js"></script>
+<script src="js/dialogue.js"></script>
+<script src="js/gallery.js"></script>
+<script src="js/custom_ui.js"></script>
+<script src="js/sound_manifest.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/board.js"></script>
+<script src="js/gloves.js"></script>
+<script src="js/fight.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

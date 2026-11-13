@@ -1,0 +1,15 @@
+# 公開しないもの（2026-11-13 公開準備）。ゲーム本体は index.html / css / js / assets / README.md。
+/_backups/
+/.claude/
+/docs/
+/tools/
+/promo/
+/RELEASE_CHECK_20261109.md
+/AGENTS.md
+/CLAUDE.md
+# ルート直下の元の曲ファイル（ゲームが使うのは assets/sound/ の中だけ）
+/*.mp3
+# ゲームが使っていない曲（使うことになったらこの3行を消す）
+/assets/sound/bgm_cheer.mp3
+/assets/sound/bgm_rest1.mp3
+/assets/sound/bgm_rest2.mp3

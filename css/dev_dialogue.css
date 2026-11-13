@@ -1,0 +1,44 @@
+/* 開発者モード時だけ読み込む。既存のゲーム画面のスタイルは変更しない。 */
+#dev-dialogue {
+  max-width: 980px;
+  margin: 12px auto;
+  padding: 12px;
+  border: 1px solid var(--muted);
+  border-radius: var(--radius);
+  background: var(--night-2);
+}
+#dev-dialogue summary { cursor: pointer; font-weight: 900; }
+#dev-dialogue .dev-dialogue-content { max-height: 65svh; overflow: auto; padding: 4px; }
+#dev-dialogue p { font-size: .9rem; line-height: 1.6; }
+#dev-dialogue [role="status"] { color: var(--gold); }
+#dev-dialogue fieldset { min-width: 0; margin: 16px 0; border: 1px solid var(--muted); border-radius: 8px; }
+#dev-dialogue legend { font-weight: 900; }
+#dev-dialogue .dev-dialogue-row { display: flex; align-items: end; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+#dev-dialogue label { flex: 1 1 240px; min-width: 0; font-size: .9rem; }
+#dev-dialogue textarea {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  resize: vertical;
+  font: inherit;
+  color: var(--paper);
+  background: var(--night);
+  border: 1px solid var(--muted);
+  border-radius: 6px;
+}
+#dev-dialogue button { max-width: 100%; white-space: normal; }
+/* キャラ単位のスキル名・台詞上書き。既存パネルと同じ配色・操作間隔。 */
+#dev-overrides { max-width: 980px; margin: 12px auto; padding: 12px; border: 1px solid var(--muted); border-radius: var(--radius); background: var(--night-2); }
+#dev-overrides summary, #dev-overrides legend { font-weight: 900; }
+#dev-overrides summary { cursor: pointer; }
+#dev-overrides .dev-dialogue-content { max-height: 65svh; overflow: auto; padding: 4px; }
+#dev-overrides p { font-size: .9rem; line-height: 1.6; }
+#dev-overrides [role="status"], #dev-overrides .dev-overrides-state { color: var(--gold); }
+#dev-overrides .dev-overrides-state { display: block; font-size: .8rem; }
+#dev-overrides fieldset { min-width: 0; margin: 16px 0; border: 1px solid var(--muted); border-radius: 8px; }
+#dev-overrides .dev-dialogue-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+#dev-overrides label { flex: 1 1 240px; min-width: 0; font-size: .9rem; }
+#dev-overrides :is(textarea, input[type="text"]) { display: block; width: 100%; margin-top: 4px; padding: 8px; font: inherit; color: var(--paper); background: var(--night); border: 1px solid var(--muted); border-radius: 6px; }
+#dev-overrides textarea { resize: vertical; }
+#dev-overrides button { max-width: 100%; white-space: normal; }

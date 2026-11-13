@@ -1,0 +1,56 @@
+{
+ "yuki": {
+  "01_normal": "illustmake/characters/山宮雪/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/01_normal.png",
+  "02_joy": "illustmake/characters/山宮雪/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/02_joy.png",
+  "03_angry": "illustmake/characters/山宮雪/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/03_angry.png",
+  "04_sad": "illustmake/characters/山宮雪/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/04_sad.png",
+  "05_fun": "illustmake/characters/山宮雪/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/05_fun.png",
+  "06_surprise": "illustmake/characters/山宮雪/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/06_surprise.png",
+  "07_shy": "illustmake/characters/山宮雪/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/07_shy.png"
+ },
+ "pink": {
+  "01_normal": "illustmake/outputs/run_20261021_193000/final/pink/01_normal.png",
+  "02_joy": "illustmake/outputs/run_20261021_193000/final/pink/02_joy.png",
+  "03_angry": "illustmake/outputs/run_20261021_193000/final/pink/03_angry.png",
+  "04_sad": "illustmake/outputs/run_20261021_193000/final/pink/04_sad.png",
+  "05_fun": "illustmake/outputs/run_20261021_193000/final/pink/05_fun.png",
+  "06_surprise": "illustmake/outputs/run_20261021_193000/final/pink/06_surprise.png",
+  "07_shy": "illustmake/outputs/run_20261021_193000/final/pink/07_shy.png"
+ },
+ "chiko": {
+  "01_normal": "illustmake/characters/青山チコ/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/01_normal.png",
+  "02_joy": "illustmake/characters/青山チコ/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/02_joy.png",
+  "03_angry": "illustmake/characters/青山チコ/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/03_angry.png",
+  "04_sad": "illustmake/characters/青山チコ/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/04_sad.png",
+  "05_fun": "illustmake/characters/青山チコ/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/05_fun.png",
+  "06_surprise": "illustmake/characters/青山チコ/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/06_surprise.png",
+  "07_shy": "illustmake/characters/青山チコ/ちびキャラ/ボクシング衣装/new_master_variants_20261028/outlined_20261102/chibi_expr/07_shy.png"
+ },
+ "ren": {
+  "01_normal": "illustmake/outputs/run_20261021_193000/final/ren/01_normal.png",
+  "02_joy": "illustmake/outputs/run_20261021_193000/final/ren/02_joy.png",
+  "03_angry": "illustmake/outputs/run_20261021_193000/final/ren/03_angry.png",
+  "04_sad": "illustmake/outputs/run_20261021_193000/final/ren/04_sad.png",
+  "05_fun": "illustmake/outputs/run_20261021_193000/final/ren/05_fun.png",
+  "06_surprise": "illustmake/outputs/run_20261021_193000/final/ren/06_surprise.png",
+  "07_shy": "illustmake/outputs/run_20261021_193000/final/ren/07_shy.png"
+ },
+ "tsubaki": {
+  "01_normal": "illustmake/outputs/run_20261021_193000/final/tsubaki/01_normal.png",
+  "02_joy": "illustmake/outputs/run_20261021_193000/final/tsubaki/02_joy.png",
+  "03_angry": "illustmake/outputs/run_20261021_193000/final/tsubaki/03_angry.png",
+  "04_sad": "illustmake/outputs/run_20261021_193000/final/tsubaki/04_sad.png",
+  "05_fun": "illustmake/outputs/run_20261021_193000/final/tsubaki/05_fun.png",
+  "06_surprise": "illustmake/outputs/run_20261021_193000/final/tsubaki/06_surprise.png",
+  "07_shy": "illustmake/outputs/run_20261021_193000/final/tsubaki/07_shy.png"
+ },
+ "amane": {
+  "01_normal": "illustmake/outputs/run_20261021_193000/final/amane/01_normal.png",
+  "02_joy": "illustmake/outputs/run_20261021_193000/final/amane/02_joy.png",
+  "03_angry": "illustmake/outputs/run_20261021_193000/final/amane/03_angry.png",
+  "04_sad": "illustmake/outputs/run_20261021_193000/final/amane/04_sad.png",
+  "05_fun": "illustmake/outputs/run_20261021_193000/final/amane/05_fun.png",
+  "06_surprise": "illustmake/outputs/run_20261021_193000/final/amane/06_surprise.png",
+  "07_shy": "illustmake/outputs/run_20261021_193000/final/amane/07_shy.png"
+ }
+}

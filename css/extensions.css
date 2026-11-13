@@ -1,0 +1,100 @@
+/* 既存の赤/青コーナー・ゴング色を引き継ぐ登録画面と会話画面。 */
+.test-save-note { margin: 0; padding: 6px 12px; background: #fff1b6; color: #3a2600; text-align: center; font-size: .8rem; }
+.screen-dialogue { max-width: 1000px; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+.dialogue-stage { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); align-items: center; gap: 10px; }
+.dialogue-stage figure { margin: 0; min-width: 0; border-bottom: 5px solid var(--red); opacity: .62; transition: opacity .18s; }
+.dialogue-stage figure[data-dialogue-side="e"] { border-color: var(--blue); }
+.dialogue-stage figure.is-speaking { opacity: 1; }
+.dialogue-stage img { display: block; width: 100%; height: min(40vh,350px); object-fit: contain; }
+.dialogue-stage [data-dialogue-side="e"] img { scale: -1 1; }
+.dialogue-stage figcaption { padding: 8px; text-align: center; overflow-wrap: anywhere; font-weight: 900; }
+.dialogue-text { background: var(--paper); color: var(--ink); border: 3px solid var(--gold); border-radius: var(--radius); padding: 20px 24px; cursor: pointer; min-height: 140px; }
+.dialogue-speaker { display: block; color: #653b09; font-size: 1.05rem; }
+.dialogue-line { margin: 8px 0 0; line-height: 1.8; font-size: 1.15rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.dialogue-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.dialogue-controls small { flex: 1; color: var(--muted); }
+.dialogue-page { font-variant-numeric: tabular-nums; }
+.dlg-custom { width: min(94vw, 900px); max-width: 900px; max-height: 90svh; overflow-y: auto; text-align: left; }
+.custom-head, .custom-tools, .custom-save { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.custom-head { justify-content: space-between; }
+.custom-head h2 { margin: 0; }
+.dlg-custom p { line-height: 1.7; font-size: .9rem; }
+.dlg-custom fieldset { margin: 18px 0; border: 1px solid var(--muted); border-radius: 12px; padding: 14px; min-width: 0; }
+.dlg-custom legend { font-weight: 900; padding: 0 6px; color: var(--gold); }
+.custom-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.custom-wide { grid-column: 1 / -1; }
+.dlg-custom label { display: flex; flex-direction: column; gap: 6px; min-width: 0; font-size: .88rem; }
+.dlg-custom input, .dlg-custom select, .dlg-custom textarea { width: 100%; min-width: 0; font: inherit; background: var(--night); color: var(--paper); border: 1px solid var(--muted); border-radius: 7px; padding: 9px; }
+.dlg-custom input[type="color"] { height: 44px; }
+.dlg-custom input[type="file"] { font-size: .8rem; }
+.dlg-custom summary { cursor: pointer; padding: 12px 4px; font-weight: 900; }
+.dlg-custom details { border-bottom: 1px solid #615775; }
+.custom-image-row { display: grid; grid-template-columns: 80px minmax(0,1fr) 130px; align-items: center; gap: 10px; padding: 12px 0; }
+.custom-image-row img { width: 80px; height: 75px; object-fit: contain; background: #514763; border-radius: 8px; }
+.custom-image-row button { grid-column: 2 / -1; justify-self: start; }
+.custom-slot-badge { align-self: flex-start; padding: 2px 7px; border: 1px solid var(--muted); border-radius: 6px; font-size: .75rem; }
+.custom-slot-badge.is-required { border-color: var(--gold); color: var(--gold); font-weight: 900; }
+.custom-slot-usage { line-height: 1.5; }
+.custom-status { background: var(--night); border-left: 4px solid var(--gold); padding: 10px; min-height: 44px; overflow-wrap: anywhere; }
+.custom-status.is-error { border-color: var(--danger); }
+.custom-points { margin: 0; font-weight: 900; color: var(--gold); }
+.custom-points.is-over { color: var(--danger); }
+.custom-save { position: sticky; bottom: -1px; padding: 12px 0; background: var(--night-2); z-index: 2; }
+.dlg-custom button:disabled { opacity: .5; cursor: wait; }
+/* 結果の絵（上が相手、下が自分）。ボタンが画面内に残るよう、高さが足りない分は2枚の絵だけを同じ割合で縮める。 */
+.dlg-result[open] { display: flex; flex-direction: column; }
+.dlg-result > * { flex-shrink: 0; }
+.dlg-result .result-fig { margin: 0 0 8px; display: flex; flex-direction: column; flex-shrink: 1; min-height: 84px; }
+.result-fig img { display: block; width: min(100%,300px); aspect-ratio: 1000/600; height: auto; max-height: 22svh; min-height: 0; margin: 0 auto; object-fit: contain; }
+.result-fig.is-big img { width: min(100%,340px); aspect-ratio: 1; max-height: 30svh; }
+.result-fig img.is-flip { scale: -1 1; }
+.result-fig figcaption { flex-shrink: 0; font-size: .85rem; }
+@media (max-width: 560px) {
+  .screen-dialogue { justify-content: flex-start; }
+  .screen-dialogue h2 { font-size: 1.05rem; }
+  .dialogue-stage { gap: 2px; }
+  .dialogue-stage img { height: 28svh; }
+  .dialogue-stage .vs { font-size: 1.1rem; }
+  .dialogue-text { padding: 14px; min-height: 150px; }
+  .dialogue-line { font-size: 1rem; }
+  .dialogue-controls small { flex-basis: 65%; font-size: .7rem; }
+  .custom-fields { grid-template-columns: 1fr; }
+  .custom-image-row { grid-template-columns: 62px minmax(0,1fr); }
+  .custom-image-row img { width: 62px; }
+  .custom-image-row > label:nth-of-type(2), .custom-image-row button { grid-column: 2; }
+  .custom-head h2 { font-size: 1.1rem; }
+}
+@media (prefers-reduced-motion: reduce) { .dialogue-stage figure { transition: none; } }
+/* ギャラリー：キャラを選ぶと、そのキャラの試合のポーズ12枚。絵を押すと大きく見られる */
+.screen-gallery { max-width: 1040px; display: flex; flex-direction: column; gap: 12px; }
+.gallery-note, .gallery-empty { margin: 0; color: var(--muted); font-size: .85rem; line-height: 1.6; }
+.gallery-chars { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+.gallery-char { border: 0; border-radius: var(--radius); padding: 6px 4px 8px; cursor: pointer; color: var(--paper); font: inherit; font-weight: 900; font-size: .85rem;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--theme) 22%, var(--night-2)), var(--night-2) 70%); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .08); }
+.gallery-char img { display: block; width: 100%; aspect-ratio: 1000 / 600; object-fit: contain; }
+.gallery-char span { display: block; margin-top: 2px; overflow-wrap: anywhere; }
+.gallery-char[aria-pressed="true"] { box-shadow: inset 0 0 0 3px var(--gold); }
+.gallery-char.is-locked { cursor: default; color: var(--muted); font-weight: 700; font-size: .72rem; }
+.gallery-char.is-locked img { filter: brightness(0) opacity(.45); }
+.gallery-name { margin: 6px 0 0; font-family: var(--display); font-weight: 400; font-size: 1.1rem; }
+.gallery-poses { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.gallery-pose { border: 0; border-radius: var(--radius); padding: 6px; cursor: pointer; background: var(--night-2); color: var(--paper); font: inherit; font-size: .8rem; font-weight: 700; }
+.gallery-pose img, .gallery-view img { display: block; width: 100%; aspect-ratio: 1000 / 600; object-fit: contain; }
+.gallery-pose img.is-flip, .gallery-view img.is-flip { scale: -1 1; }
+.gallery-pose span { display: block; margin-top: 4px; }
+.dlg-gallery { width: min(760px, calc(100vw - 32px)); text-align: center; }
+.gallery-view { margin: 0; }
+.gallery-view figcaption { margin-top: 6px; font-weight: 900; }
+.dlg-gallery .dlg-actions { justify-content: center; }
+.result-unlock { margin: -6px 0 12px; font-size: .85rem; font-weight: 900; color: var(--paper); }
+@media (max-width: 560px) {
+  .gallery-chars { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .gallery-poses { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* オプションの音量（曲・効果音） */
+.opt-volume { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; }
+.opt-volume legend { padding: 0; margin-bottom: 4px; font-size: .85rem; font-weight: 700; color: var(--muted); }
+.opt-volume label { display: grid; grid-template-columns: 4.5em minmax(0, 1fr) 3.2em; align-items: center; gap: 10px; font-weight: 900; font-size: .9rem; }
+.opt-volume input[type="range"] { width: 100%; accent-color: var(--gold); }
+.opt-volume output { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.opt-volume small { color: var(--muted); font-size: .75rem; }
