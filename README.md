@@ -8,3 +8,9 @@
 https://ark3110-spec.github.io/chibi-boxing-puzzle/
 
 PCでもスマホでも遊べます。音が出ます。
+
+## 感想フォーム
+
+タイトル画面下の「感想を送る」から、匿名で感想を送れます（`feedback.html` → 送信後 `thanks.html`）。
+送信は [FormSubmit](https://formsubmit.co/) のフォームPOSTで、サーバ側のコードはありません。
+FormSubmit は初回送信時に宛先アドレスへ有効化メールが届き、その有効化が済むまで感想は届きません（有効化は宛先側で行います）。

@@ -98,3 +98,7 @@
 .opt-volume input[type="range"] { width: 100%; accent-color: var(--gold); }
 .opt-volume output { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
 .opt-volume small { color: var(--muted); font-size: .75rem; }
+/* タイトル下の「感想を送る」リンク（feedback.html へ） */
+.title-foot { margin: 0; font-size: .85rem; }
+.title-foot a { color: var(--muted); text-underline-offset: 3px; }
+.title-foot a:hover { color: var(--paper); }

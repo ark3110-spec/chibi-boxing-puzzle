@@ -1,0 +1,26 @@
+/* 感想フォーム（feedback.html）と送信後ページ（thanks.html）だけで使う。色・ボタンは style.css を引き継ぐ。 */
+.fb-page { max-width: 560px; margin: 0 auto; padding: max(24px, env(safe-area-inset-top)) 16px max(32px, env(safe-area-inset-bottom)); }
+.fb-title { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 7vw, 2.2rem); margin: 8px 0 12px; color: var(--gold); }
+.fb-lead { margin: 0 0 4px; font-weight: 700; line-height: 1.7; }
+.fb-note { margin: 0 0 20px; color: var(--muted); font-size: .85rem; }
+.fb-form { display: grid; gap: 18px; }
+.fb-field { display: grid; gap: 8px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.fb-field > label, .fb-field > legend { font-weight: 900; padding: 0; }
+.fb-req, .fb-opt { margin-left: 8px; font-size: .72rem; font-weight: 700; padding: 1px 8px; border-radius: 999px; vertical-align: 2px; }
+.fb-req { background: var(--red); color: #fff; }
+.fb-opt { background: rgba(255, 255, 255, .12); color: var(--muted); }
+.fb-cats legend { margin-bottom: 8px; }
+.fb-cats label { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius); background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .14); cursor: pointer; }
+.fb-cats label:has(input:checked) { box-shadow: inset 0 0 0 2px var(--gold); background: rgba(255, 204, 51, .12); }
+.fb-cats input { width: 18px; height: 18px; margin: 0; accent-color: var(--gold); }
+.fb-form textarea, .fb-form input[type="text"] {
+  width: 100%; font: inherit; font-size: 1rem; color: var(--ink); background: var(--paper);
+  border: 2px solid transparent; border-radius: var(--radius); padding: 12px 14px;
+}
+.fb-form textarea { resize: vertical; min-height: 140px; line-height: 1.7; }
+.fb-form textarea:focus, .fb-form input[type="text"]:focus { border-color: var(--gold); outline: none; }
+.fb-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 4px; }
+.fb-actions a.btn { text-decoration: none; color: inherit; display: inline-block; }
+.fb-actions a.btn-gong { color: #3a2600; }
+.fb-thanks { text-align: center; padding-top: 18svh; }
+.fb-thanks .fb-actions { justify-content: center; margin-top: 24px; }

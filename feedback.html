@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>感想を送る｜ちびキャラボクシング～パズル編～</title>
+  <meta name="theme-color" content="#1d1830">
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/feedback.css">
+</head>
+<body>
+<main class="fb-page">
+  <h1 class="fb-title">感想を送る</h1>
+  <p class="fb-lead">感想は作者に届きます。お名前は任意です。</p>
+  <p class="fb-note">メールアドレスなどの個人情報は書かないでください。</p>
+
+  <!-- 送信は FormSubmit（https://formsubmit.co/）。サーバ側のコードはありません。 -->
+  <form class="fb-form" id="fb-form" action="https://formsubmit.co/khione-hion@muse.ai" method="POST" accept-charset="UTF-8">
+    <input type="hidden" name="_subject" value="ちびパズル感想">
+    <input type="hidden" name="_next" value="https://ark3110-spec.github.io/chibi-boxing-puzzle/thanks.html">
+    <!-- スパム避け（人には見えない欄。ここに入力があると送信されない） -->
+    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+    <fieldset class="fb-field fb-cats">
+      <legend>カテゴリ<span class="fb-req">必須</span></legend>
+      <label><input type="radio" name="カテゴリ" value="たのしかった・よかった" required><span>たのしかった・よかった</span></label>
+      <label><input type="radio" name="カテゴリ" value="ここが気になった"><span>ここが気になった</span></label>
+      <label><input type="radio" name="カテゴリ" value="その他"><span>その他</span></label>
+    </fieldset>
+
+    <div class="fb-field">
+      <label for="fb-message">感想<span class="fb-req">必須</span></label>
+      <textarea id="fb-message" name="感想" rows="7" maxlength="3000" required></textarea>
+    </div>
+
+    <div class="fb-field">
+      <label for="fb-name">お名前<span class="fb-opt">任意・空欄なら「匿名」</span></label>
+      <input id="fb-name" type="text" name="名前" maxlength="40" autocomplete="off" placeholder="匿名">
+    </div>
+
+    <div class="fb-actions">
+      <button class="btn btn-gong" type="submit">送る</button>
+      <a class="btn btn-ghost btn-sm" href="./">ゲームに戻る</a>
+    </div>
+  </form>
+</main>
+<script>
+// 名前が空欄なら「匿名」として送る。
+document.getElementById('fb-form').addEventListener('submit', () => {
+  const name = document.getElementById('fb-name');
+  if (!name.value.trim()) name.value = '匿名';
+});
+</script>
+</body>
+</html>
