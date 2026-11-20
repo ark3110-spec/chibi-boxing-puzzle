@@ -207,7 +207,7 @@ CBP.CHARS = [
   {
     id: 'natsume', name: 'ナツメ', ruby: '', nick: '', style: 'カウンター', theme: '#8f7fe8',
     fav: 'hook', weak: 'jab', skillType: 'counter',
-    skill: { name: '味変にこんなパンチはどうかしら？', charge: 'counter', desc: '8秒間、どのパンチでもガード・カウンターでき、カウンターに必要な数が減る。フックがさらに1.3倍。' },
+    skill: { name: 'さあ、次はどんな味になるかしらね？', charge: 'counter', desc: '8秒間、どのパンチでもガード・カウンターでき、カウンターに必要な数が減る。フックがさらに1.3倍。' },
     glove: { main: '#2a3a99', light: '#7b8de0', cuff: '#ffffff' },
     facing: ALL_RIGHT_WIN_R, expressions: false,
     cpu: { interval: 1.15, power: 1.05, weights: { jab: 1, straight: 1.5, hook: 3, upper: 1, body: 1 } },
