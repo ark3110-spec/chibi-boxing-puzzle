@@ -431,23 +431,13 @@ CBP.Fight = class {
   }
 
   /* ================= 試合中の台詞・ヤンデレ ================= */
+  /* 試合中の台詞は演出のみ（2026-11-20 本人判断）。パラメータ変動（怒りの攻撃1.25倍）は付けない。
+   * 発火条件は全キャラ共通：相手の体力が半分を切ったとき、各選手1回だけ。 */
   checkMidFight() {
     if (!CBP.RULES.midFightEnabled) return;
-    const p = this.p, e = this.e, max = CBP.RULES.maxHp, f = this.flags;
-    if (!f.pMidFight) {
-      if (p.c.id === 'pink' && e.hp < e.maxHp * 0.4) { f.pMidFight = true; this.sayMidFight(p, e); }
-      else if (p.c.id === 'chiko' && p.hp - e.hp >= 25) {
-        f.pMidFight = true; this.sayMidFight(p, e);
-        e.angry = true; this.banner('相手が怒った！', 'warn', 1.1);
-      }
-    }
-    if (!f.eMidFight) {
-      if (e.c.id === 'pink' && p.hp < p.maxHp * 0.4) { f.eMidFight = true; this.sayMidFight(e, p); }
-      else if (e.c.id === 'chiko' && e.hp - p.hp >= 25) {
-        f.eMidFight = true; this.sayMidFight(e, p);
-        p.angry = true; this.banner('反撃のチャンス！', 'special', 1.1);
-      }
-    }
+    const p = this.p, e = this.e, f = this.flags;
+    if (!f.pMidFight && e.hp < e.maxHp * 0.5) { f.pMidFight = true; this.sayMidFight(p, e); }
+    if (!f.eMidFight && p.hp < p.maxHp * 0.5) { f.eMidFight = true; this.sayMidFight(e, p); }
   }
 
   sayMidFight(from, to) {

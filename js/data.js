@@ -44,7 +44,7 @@ CBP.RULES = {
   downStop: 0.75,        // ダウンの瞬間のストップモーション（秒）
   downStopLast: 1.1,     // 3回目のダウン（TKO）のときのストップモーション（秒）
   yandere: false,        // 雪のヤンデレモード（煽られると発動）。保留中なので切っている（2026-10-20）。true で元に戻る
-  midFightEnabled: false, // 2026-11-10 本人判断で一旦停止（ピンク・チコの2人だけが言える不公平感のため）。true で元に戻る。チコの怒り連動（攻撃1.25倍・バナー）も一緒に止まる
+  midFightEnabled: true, // 2026-11-20 本人判断で再開（全員分のセリフが揃ったため）。演出のみで、パラメータ変動（怒りの攻撃1.25倍）は付けない
   cornerRest: [],        // インターバルのピンチで、スツールの代わりにコーナーポストにもたれる絵を使うキャラ（例：['pink', 'ren']）。空なら全員スツール（2026-10-24）
 };
 
@@ -101,6 +101,10 @@ CBP.CHARS = [
     facing: ALL_RIGHT,
     cpu: { interval: 1.0, power: 1.0, weights: { jab: 1, straight: 3, hook: 1.5, upper: 1, body: 1.5 } },
     lines: {
+      intro: 'よろしくお願いします。',
+      counter: '負けませんっ！',
+      midFight: ['このままいきます'],
+      win: 'ふぅ、ありがとうございました。',
       // 設定PDF（ヤンデレ時）
       yandere: '謝ったって許しませんし、ご希望通り、試合で決着をつけましょう？',
     },
@@ -113,8 +117,11 @@ CBP.CHARS = [
     facing: ALL_RIGHT,
     cpu: { interval: 1.0, power: 1.0, weights: { jab: 2.5, straight: 1.5, hook: 2, upper: 2, body: 1.5 } },
     lines: {
-      // ピンクPDF（抜粋）
-      midFight: ['ほらっ、ほらっ', 'よわよわボクサーさん♪'],
+      intro: 'ふふ、油断したらぼっこぼこにしちゃいますよ♪',
+      counter: 'ふふっ、だ～めっ♪',
+      // ピンクPDF（抜粋）＋本人のセリフ書き出し（2026-11-06）
+      midFight: ['ほらっ、ほらっ', 'このままじゃ負けちゃいますよ、よわよわボクサーさん♪'],
+      win: '私の勝ちですね♪',
     },
   },
   {
@@ -125,7 +132,8 @@ CBP.CHARS = [
     facing: ALL_RIGHT,
     cpu: { interval: 1.0, power: 1.0, weights: { jab: 1.5, straight: 1.5, hook: 1, upper: 1, body: 3 } },
     lines: {
-      // 設定PDF
+      // 設定PDF＋本人のセリフ書き出し（2026-11-06）
+      intro: '手加減してあげよっか～？',
       counter: 'おっとあぶないな〜',
       midFight: ['も〜、そんなパンチみえみえだよ〜', 'ほらっ、だめだよっ！'],
       win: '残念でした〜。ボクとまたやるんだったらもっと練習しておいで〜',
@@ -141,6 +149,8 @@ CBP.CHARS = [
     lines: {
       // boxing_heroine_project lore/ren.md
       intro: '結果で黙らせてあげる。見てなさい！',
+      counter: '甘いわねっ！',
+      midFight: ['さあ、ドンドン行くわよ！'],
       win: 'あたしは誰にも負けない',
     },
   },
@@ -154,6 +164,9 @@ CBP.CHARS = [
     lines: {
       // boxing_heroine_project lore/tsubaki.md（抜粋）
       intro: '……よろしく。',
+      counter: 'そこ',
+      midFight: ['予想通りでよかったわ'],
+      win: 'いい経験になったわ。ありがとう。',
     },
   },
   {
@@ -166,62 +179,90 @@ CBP.CHARS = [
     lines: {
       // boxing_heroine_project lore/amane.md（抜粋）
       intro: 'いっぱい走るよー！',
+      counter: '私の番っ！',
+      midFight: ['止まってあげないよ～！'],
+      win: 'えへへ～勝った～！ぶいっ！',
     },
   },
   /* 投票企画（セコンド視点の選手応援企画）の4人。2026-11-05 追加。
    * 名前はリングネーム。スタイルと能力はプロフィール画像（chara_lore_box/00_INBOX/10・12・14・16.png）、
-   * 得意・苦手・スキルの型は 2026-11-05 にユーザーが決めたもの。スキル名はまだ決まっていないので型の名前のまま。
+   * 得意・苦手・スキルの型は 2026-11-05 にユーザーが決めたもの。スキル名は 2026-11-20 にユーザーが決定。
    * skillType：fight.js が見るスキルの型（power=得意パンチ強化、counter=カウンター強化、rush=つなぎ短縮。自作キャラと同じ効果）。
-   * 台詞は未承認なので入れていない（試合中は無言）。cpu の数値はプロフィールの能力からの仮。
+   * 台詞は本人のセリフ書き出し（2026-11-06）を 2026-11-20 に正本へ取り込み。cpu の数値はプロフィールの能力からの仮。
    * expressions: false＝表情差分の絵がない（試合前の会話では構えの絵を使う。js/appearance.js）。 */
   {
     id: 'kurumi', name: 'クルミ', ruby: '', nick: '', style: 'アウトボクサー', theme: '#2f5fe0',
     fav: 'jab', weak: 'straight', skillType: 'power',
-    skill: { name: '得意パンチ強化', charge: 'fav', desc: '8秒間、ジャブの威力がさらに1.3倍。' },
+    skill: { name: '華麗なパンチをご賞味あれ', charge: 'fav', desc: '8秒間、ジャブの威力がさらに1.3倍。' },
     glove: { main: '#2448c8', light: '#7f9cff', cuff: '#ffffff' },
     facing: ALL_RIGHT_WIN_R, expressions: false,
     cpu: { interval: 0.85, power: 0.85, weights: { jab: 3, straight: 1.5, hook: 1, upper: 0.5, body: 1 } },
-    lines: {},
+    lines: {
+      intro: 'さあ、美麗な戦い方、見せてあげるわ',
+      counter: 'あら、引き立てありがとっ！',
+      midFight: ['見とれてもいいけど、手加減しないわよ～？'],
+      win: 'まあ、これくらい当然ね。',
+    },
   },
   {
     id: 'natsume', name: 'ナツメ', ruby: '', nick: '', style: 'カウンター', theme: '#8f7fe8',
     fav: 'hook', weak: 'jab', skillType: 'counter',
-    skill: { name: 'カウンター強化', charge: 'counter', desc: '8秒間、どのパンチでもガード・カウンターでき、カウンターに必要な数が減る。フックがさらに1.3倍。' },
+    skill: { name: '味変にこんなパンチはどうかしら？', charge: 'counter', desc: '8秒間、どのパンチでもガード・カウンターでき、カウンターに必要な数が減る。フックがさらに1.3倍。' },
     glove: { main: '#2a3a99', light: '#7b8de0', cuff: '#ffffff' },
     facing: ALL_RIGHT_WIN_R, expressions: false,
     cpu: { interval: 1.15, power: 1.05, weights: { jab: 1, straight: 1.5, hook: 3, upper: 1, body: 1 } },
-    lines: {},
+    lines: {
+      intro: 'よろしくお願いしますね～',
+      counter: '油断しちゃ、だ～め♪',
+      midFight: ['負けませんよ～'],
+      win: 'ふぅ、いい試合でしたね♪',
+    },
   },
   {
     id: 'raichi', name: 'ライチ', ruby: '', nick: '', style: 'インファイター', theme: '#ff4b2b',
     fav: 'straight', weak: 'hook', skillType: 'power',
-    skill: { name: '得意パンチ強化', charge: 'fav', desc: '8秒間、ストレートの威力がさらに1.3倍。' },
+    skill: { name: '私の一撃食らってみろ！', charge: 'fav', desc: '8秒間、ストレートの威力がさらに1.3倍。' },
     glove: { main: '#d8222a', light: '#ff7a6e', cuff: '#26262e' },
     facing: ALL_RIGHT_WIN_R, expressions: false,
     cpu: { interval: 0.95, power: 1.2, weights: { jab: 1, straight: 3, hook: 2, upper: 1, body: 1.5 } },
-    lines: {},
+    lines: {
+      intro: 'さあ、楽しい試合にしようっ！！',
+      counter: 'そこだっ！',
+      midFight: ['どうした、もっと打ち合おう！'],
+      win: 'いい試合だったな！またやりたいな！',
+    },
   },
   {
     id: 'ichigo', name: 'イチゴ', ruby: '', nick: '', style: 'オールラウンダー', theme: '#ff4d6d',
     fav: 'body', weak: 'upper', skillType: 'rush',
-    skill: { name: 'つなぎ短縮', charge: 'fav', desc: '8秒間、どのパンチも2個からつなげる。' },
+    skill: { name: 'あま～いパンチ召し上がれ', charge: 'fav', desc: '8秒間、どのパンチも2個からつなげる。' },
     glove: { main: '#e2324c', light: '#ff9aaa', cuff: '#ffffff' },
     facing: ALL_RIGHT_WIN_R, expressions: false,
     cpu: { interval: 1.0, power: 1.0, weights: { jab: 1.5, straight: 1.5, hook: 1.5, upper: 1, body: 3 } },
-    lines: {},
+    lines: {
+      intro: 'いい試合にしましょうね♪',
+      counter: 'こっちですっ',
+      midFight: ['倒しちゃいますよ～？'],
+      win: 'ふぅ、お疲れ様でした♪',
+    },
   },
   /* かなみ。2026-11-06 追加。絵は黄色い百合の衣装（黒×ピンクの案は illustmake に残してあり、ゲームには入れていない）。
-   * 得意・苦手・スキルの型は 2026-11-06 にユーザーが決めたもの。スキル名はまだ決まっていないので型の名前のまま。
+   * 得意・苦手・スキルの型は 2026-11-06 にユーザーが決めたもの。スキル名は 2026-11-20 にユーザーが決定。
    * style は資料に戦い方の記述がないので、決め技（アッパー）を仮に出している。
-   * 台詞は未承認なので入れていない（試合中は無言）。cpu の interval・power は資料に能力の数値がないので標準の1.0（仮）。 */
+   * 台詞は本人のセリフ書き出し（2026-11-06）を 2026-11-20 に正本へ取り込み。cpu の interval・power は資料に能力の数値がないので標準の1.0（仮）。 */
   {
     id: 'kanami', name: 'かなみ', ruby: '', nick: '', style: 'アッパー', theme: '#e8c21a',
     fav: 'upper', weak: 'hook', skillType: 'power',
-    skill: { name: '得意パンチ強化', charge: 'fav', desc: '8秒間、アッパーの威力がさらに1.3倍。' },
+    skill: { name: 'ルーキーラッキーパンチ❤', charge: 'fav', desc: '8秒間、アッパーの威力がさらに1.3倍。' },
     glove: { main: '#f2447a', light: '#ff9ab8', cuff: '#ffe75a' },
     facing: ALL_RIGHT_WIN_R, expressions: false,
     cpu: { interval: 1.0, power: 1.0, weights: { jab: 1.5, straight: 1.5, hook: 1, upper: 3, body: 1.5 } },
-    lines: {},
+    lines: {
+      intro: 'お手柔らかにお願いしますねえ♪',
+      counter: 'あはっ、ざ～んねんっ♪',
+      midFight: ['まさか手加減してくれてるんですかぁ？な～んて♪'],
+      win: 'あはっ、私の勝ちですねぇ♪聞こえてますかぁ。くす',
+    },
   },
 ];
 
@@ -231,12 +272,14 @@ CBP.CHARS = [
 CBP.MOBS = [
   {
     id: 'mob_m', mob: true, name: 'モブ男子', ruby: '', nick: '', style: 'モブ', theme: '#8b93a6',
-    fav: null, weak: null, skill: null, facing: ALL_RIGHT, lines: {},
+    fav: null, weak: null, skill: null, facing: ALL_RIGHT,
+    lines: { intro: '手加減しない', counter: 'ふんっ！', midFight: ['なんだ、こんなもんか'], win: '家でおとなしくしてるんだな' },
     cpu: { interval: 1.15, power: 0.8, weights: { jab: 3, straight: 2, hook: 1.5, upper: 0.5, body: 1 } },
   },
   {
     id: 'mob_f', mob: true, name: 'モブ女子', ruby: '', nick: '', style: 'モブ', theme: '#7fa38a',
-    fav: null, weak: null, skill: null, facing: ALL_RIGHT, lines: {},
+    fav: null, weak: null, skill: null, facing: ALL_RIGHT,
+    lines: { intro: 'はあ、ケガしても知らないわよ', counter: 'こんなパンチ当たるわけないでしょ？', midFight: ['なんだ、こんなもん？'], win: 'ふう、準備運動にはよかったかも' },
     cpu: { interval: 1.1, power: 0.85, weights: { jab: 2.5, straight: 2, hook: 1.5, upper: 0.7, body: 1.3 } },
   },
 ];
