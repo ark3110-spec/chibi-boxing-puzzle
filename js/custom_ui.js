@@ -56,6 +56,21 @@
       if (!ok) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } ta.remove(); }
       done.textContent = ok ? 'コピーしました。AIに貼り付けて使ってください。' : 'コピーできませんでした。';
     }
+    // 人形の絵そのものを画像としてコピーする。WebPの埋め込み画像をPNGに変換してからクリップボードへ入れる。
+    async function copyDollImage(dollFile, done) {
+      const src = (window.CBP_DOLLS || {})[dollFile];
+      if (!src) { done.textContent = '人形の画像が見つかりませんでした。'; return; }
+      let ok = false;
+      try {
+        const img = new Image();
+        await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = src; });
+        const canvas = document.createElement('canvas'); canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+        canvas.getContext('2d').drawImage(img, 0, 0);
+        const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+        if (blob) { await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]); ok = true; }
+      } catch (e) { ok = false; }
+      done.textContent = ok ? '人形の画像をコピーしました。AIにそのまま貼り付けられます。' : '画像のコピーができませんでした。';
+    }
     // 能力ポイントの使用量。数値を変えるたびに計算し直す（保存できるかの判定は X の save 側）。
     function updatePoints() {
       if (!points) return;
@@ -131,8 +146,8 @@
           const dollFile = DOLL_BY_SLOT[group + '.' + slot];
           const dollSrc = dollFile ? (window.CBP_DOLLS || {})[dollFile] : null;
           if (dollSrc) {
-            const dollImg = document.createElement('img'); dollImg.className = 'doll-thumb'; dollImg.src = dollSrc; dollImg.alt = 'ポーズ人形（クリックでプロンプトをコピー）'; dollImg.title = 'クリックでこのポーズのプロンプトをコピー';
-            dollImg.addEventListener('click', () => copyPosePrompt(group, slot, promptDone));
+            const dollImg = document.createElement('img'); dollImg.className = 'doll-thumb'; dollImg.src = dollSrc; dollImg.alt = 'ポーズ人形（クリックで人形の画像をコピー）'; dollImg.title = 'クリックで人形の画像をコピー';
+            dollImg.addEventListener('click', () => copyDollImage(dollFile, promptDone));
             promptBox.appendChild(dollImg);
           }
           const promptBtn = document.createElement('button'); promptBtn.type = 'button'; promptBtn.className = 'btn btn-ghost btn-sm'; promptBtn.textContent = dollFile ? '人形プロンプトをコピー' : 'このポーズのプロンプトをコピー';
