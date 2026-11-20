@@ -193,7 +193,7 @@ CBP.CHARS = [
   {
     id: 'kurumi', name: 'クルミ', ruby: '', nick: '', style: 'アウトボクサー', theme: '#2f5fe0',
     fav: 'jab', weak: 'straight', skillType: 'power',
-    skill: { name: '華麗なパンチをご賞味あれ', charge: 'fav', desc: '8秒間、ジャブの威力がさらに1.3倍。' },
+    skill: { name: '華麗なフルコース', charge: 'fav', desc: '8秒間、ジャブの威力がさらに1.3倍。' },
     glove: { main: '#2448c8', light: '#7f9cff', cuff: '#ffffff' },
     facing: ALL_RIGHT_WIN_R, expressions: false,
     cpu: { interval: 0.85, power: 0.85, weights: { jab: 3, straight: 1.5, hook: 1, upper: 0.5, body: 1 } },
