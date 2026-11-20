@@ -23,6 +23,15 @@
     const dialog = document.querySelector('#dlg-custom'), form = dialog.querySelector('form');
     const pick = dialog.querySelector('#custom-pick'), status = dialog.querySelector('#custom-status');
     const slots = dialog.querySelector('#custom-images'), points = dialog.querySelector('#custom-points');
+    // 人形用プロンプトのコピー。file:// でも動くよう clipboard API と選択コピーの両対応にする。
+    const dollCopy = dialog.querySelector('#doll-prompt-copy'), dollText = dialog.querySelector('#doll-prompt'), dollDone = dialog.querySelector('#doll-prompt-done');
+    if (dollCopy && dollText) dollCopy.addEventListener('click', async () => {
+      const text = dollText.value;
+      let ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { /* フォールバックへ */ }
+      if (!ok) { dollText.focus(); dollText.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } }
+      if (dollDone) dollDone.textContent = ok ? 'コピーしました。AIに貼り付けて使ってください。' : 'コピーできませんでした。テキストを選んで手動でコピーしてください。';
+    });
     // 能力ポイントの使用量。数値を変えるたびに計算し直す（保存できるかの判定は X の save 側）。
     function updatePoints() {
       if (!points) return;
