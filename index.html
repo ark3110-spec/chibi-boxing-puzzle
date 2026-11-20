@@ -266,7 +266,23 @@
       <label>このセリフの表情<select name="introExpression"></select></label>
       <p class="custom-wide">このキャラが話すひとことです。左右が入れ替わっても同じ本人が話します。</p>
     </fieldset>
-    <fieldset><legend>画像スロット</legend>
+        <fieldset><legend>画像スロット</legend>
+      <div class="custom-doll-prompt">
+        <p>灰色のポーズ人形から自分のキャラを作る場合は、人形の画像とこのプロンプトをAI（ChatGPTなど）に一緒に渡してください。「キャラクター：」の後ろを自分のキャラの説明に書き換えて使います。</p>
+        <label class="custom-wide">人形用プロンプト<textarea id="doll-prompt" rows="12">添付した灰色の人形の画像のポーズと構図をそのまま使って、次のキャラクターのイラストを作ってください。
+
+キャラクター：（ここに自分のキャラの見た目を書いてください。例：黒髪ツインテール、赤い目、青いスポーツウェア、赤いボクシンググローブの元気な女の子）
+
+条件：
+・ポーズ、体の向き、カメラの角度は人形とまったく同じにしてください
+・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください
+・ボクシンググローブは着けたままにしてください（外さないでください）
+・脚は自然な立ち姿にしてください（脚を開きすぎたり、ガニ股になったりしないようにしてください）
+・背景は単色（白または薄いグレー）にしてください
+・文字やロゴは入れないでください</textarea></label>
+        <div class="custom-tools"><button id="doll-prompt-copy" class="btn btn-ghost btn-sm" type="button">プロンプトをコピー</button><span id="doll-prompt-done" role="status" aria-live="polite"></span></div>
+      </div>
+
       <p>必須は横向きの「構え」1枚だけです（簡易版はこれだけで遊べます）。他の枠はすべて任意で、埋めた分だけ各場面で使われます。</p>
       <p>PNG・JPEG・WebP／1枚3MiB以下／縦横64〜2048px。透過PNG・WebP推奨。保存量は全キャラ合計32MiBまで。</p>
       <p>横向きは右向きの全身を基本に、1000×600の同じ位置・頭サイズで揃えると安定します。各スロットで元絵の向きも選べます。正面は1人称の相手用、表情は掛け合い用です。</p>
