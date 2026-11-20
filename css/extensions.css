@@ -36,6 +36,8 @@
 .custom-pose-prompt .doll-thumb { width: 64px; height: 64px; object-fit: contain; background: #514763; border-radius: 8px; cursor: pointer; }
 .custom-pose-prompt button { grid-column: auto; }
 .custom-pose-done { font-size: .85rem; }
+.custom-prompt-setup { display: grid; gap: 8px; margin: 14px 0; }
+.custom-prompt-setup p { margin: 0; }
 .custom-slot-badge { align-self: flex-start; padding: 2px 7px; border: 1px solid var(--muted); border-radius: 6px; font-size: .75rem; }
 .custom-slot-badge.is-required { border-color: var(--gold); color: var(--gold); font-weight: 900; }
 .custom-slot-usage { line-height: 1.5; }

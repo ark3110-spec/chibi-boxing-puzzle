@@ -284,6 +284,14 @@
         <div class="custom-tools"><button id="doll-prompt-copy" class="btn btn-ghost btn-sm" type="button">プロンプトをコピー</button><span id="doll-prompt-done" role="status" aria-live="polite"></span></div>
       </div>
 
+      <div class="custom-prompt-setup">
+        <p><strong>ポーズ別プロンプトの作り方</strong>（下の各ポーズのコピーボタンが出す文章が切り替わります）</p>
+        <label><input type="radio" name="prompt-mode" value="text" checked> 見た目を文章で書く</label>
+        <label><input type="radio" name="prompt-mode" value="ref"> 手持ちのキャラ絵を使う（AIに渡す順番：1枚目＝キャラ絵、2枚目＝人形の絵）</label>
+        <label class="custom-wide" id="char-desc-wrap">あなたのキャラの見た目（ここに書くと、上の人形用プロンプトと下のポーズ別プロンプトすべてに反映されます）<textarea id="custom-char-desc" rows="3" placeholder="例：黒髪ツインテール、赤い目、青いスポーツウェア、赤いボクシンググローブの元気な女の子"></textarea></label>
+        <p id="char-desc-note" hidden>手持ちのキャラ絵を使う場合は、見た目の記入は不要です。人形の絵は各ポーズの人形をクリックするとコピーできます。</p>
+      </div>
+
       <p>必須は横向きの「構え」1枚だけです（簡易版はこれだけで遊べます）。他の枠はすべて任意で、埋めた分だけ各場面で使われます。</p>
       <p>PNG・JPEG・WebP／1枚3MiB以下／縦横64〜2048px。透過PNG・WebP推奨。保存量は全キャラ合計32MiBまで。</p>
       <p>横向きは右向きの全身を基本に、1000×600の同じ位置・頭サイズで揃えると安定します。各スロットで元絵の向きも選べます。正面は1人称の相手用、表情は掛け合い用です。</p>

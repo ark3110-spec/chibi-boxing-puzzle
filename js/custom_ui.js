@@ -36,18 +36,33 @@
     const DOLL_BY_SLOT = { 'side.guard': 'pose_05_side_guard', 'side.jab': 'pose_02_jab', 'side.straight': 'pose_03_straight', 'side.hitFace': 'pose_09_side_hit', 'side.ko': 'pose_06_side_ko', 'front.guard': 'pose_01_guard', 'front.jab': 'pose_08_pov_punch', 'front.hitFace': 'pose_10_pov_hit', 'front.ko': 'pose_07_pov_ko_big', 'special.koBig': 'pose_04_ko' };
     const NO_STAND = new Set(['side.ko', 'side.koBody', 'side.rest', 'side.restPinch', 'front.ko', 'front.koBody', 'special.koBig', 'special.corner']);
     const POSE_DESC = { guard: 'ガードの構え', jab: 'ジャブを打つところ', straight: 'ストレートを打つところ', hook: 'フックを打つところ', upper: 'アッパーを打つところ', body: 'ボディブローを打つところ', block: '相手の攻撃をガードするところ', hitFace: '顔にパンチが当たったところ', hitBody: 'お腹にパンチが当たったところ', win: '勝って喜ぶところ', ko: 'ダウンして倒れているところ', pinch: '体力が残り少なく、苦しい表情のところ', rest: 'ラウンド間にコーナーの椅子で休憩するところ', restPinch: '体力が残り少ない状態で、コーナーの椅子で休憩するところ', koBody: 'お腹を押さえてうずくまって倒れているところ', windup: 'パンチを引いて攻撃に移る直前のところ', corner: 'ラウンド間にコーナーの椅子で休憩するところ', koBig: '大の字に倒れているところ' };
-    const CHAR_LINE = 'キャラクター：（ここに自分のキャラの見た目を書いてください。例：黒髪ツインテール、赤い目、青いスポーツウェア、赤いボクシンググローブの元気な女の子）';
+    const CHAR_PLACEHOLDER = '（ここに自分のキャラの見た目を書いてください。例：黒髪ツインテール、赤い目、青いスポーツウェア、赤いボクシンググローブの元気な女の子）';
+    // プロンプトの作り方（text＝見た目を文章で書く／ref＝手持ちのキャラ絵を使う）と、共通の見た目テキスト。
+    // 見た目を上の欄に書くと、ポーズ別プロンプトすべてに反映される。
+    let promptMode = 'text';
+    let charDesc = '';
+    function charLine() { return 'キャラクター：' + (charDesc.trim() || CHAR_PLACEHOLDER); }
     function posePromptText(group, slot) {
       const key = group + '.' + slot;
       const legs = NO_STAND.has(key) ? '' : '・脚は自然な立ち姿にしてください（脚を開きすぎたり、ガニ股になったりしないようにしてください）\n';
+      if (promptMode === 'ref') {
+        if (group === 'expression') {
+          return `1枚目に添付したキャラクターの「${X.EXPRESSIONS[slot]}」の表情のイラストを作ってください。試合前の掛け合い用の絵です。\n\n条件：\n・キャラクターの見た目は1枚目の画像のままにしてください\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・表情がよく分かる構図にしてください\n・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
+        }
+        if (DOLL_BY_SLOT[key]) {
+          return `1枚目に添付したキャラクターを、2枚目に添付した灰色の人形のポーズと構図で描いてください。\n\n条件：\n・キャラクターの見た目（髪型・服装・色）は1枚目の画像のままにしてください\n・ポーズ、体の向き、カメラの角度は2枚目の人形とまったく同じにしてください\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・ボクシンググローブは着けたままにしてください（外さないでください）\n${legs}・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
+        }
+        const viewR = group === 'front' ? '正面から見た姿で、' : group === 'special' ? '' : '横向きで、';
+        return `1枚目に添付したキャラクターを、次のポーズで描いてください。\n\nポーズ：${viewR}${POSE_DESC[slot] || '指定のポーズ'}\n\n条件：\n・キャラクターの見た目は1枚目の画像のままにしてください\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・ボクシンググローブは着けたままにしてください（外さないでください）\n${legs}・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
+      }
       if (group === 'expression') {
-        return `次のキャラクターの「${X.EXPRESSIONS[slot]}」の表情のイラストを作ってください。試合前の掛け合い用の絵です。\n\n${CHAR_LINE}\n\n条件：\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・表情がよく分かる構図にしてください\n・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
+        return `次のキャラクターの「${X.EXPRESSIONS[slot]}」の表情のイラストを作ってください。試合前の掛け合い用の絵です。\n\n${charLine()}\n\n条件：\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・表情がよく分かる構図にしてください\n・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
       }
       if (DOLL_BY_SLOT[key]) {
-        return `添付した灰色の人形の画像のポーズと構図をそのまま使って、次のキャラクターのイラストを作ってください。\n\n${CHAR_LINE}\n\n条件：\n・ポーズ、体の向き、カメラの角度は人形とまったく同じにしてください\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・ボクシンググローブは着けたままにしてください（外さないでください）\n${legs}・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
+        return `添付した灰色の人形の画像のポーズと構図をそのまま使って、次のキャラクターのイラストを作ってください。\n\n${charLine()}\n\n条件：\n・ポーズ、体の向き、カメラの角度は人形とまったく同じにしてください\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・ボクシンググローブは着けたままにしてください（外さないでください）\n${legs}・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
       }
       const view = group === 'front' ? '正面から見た姿で、' : group === 'special' ? '' : '横向きで、';
-      return `次のキャラクターのイラストを、指定のポーズで作ってください。\n\n${CHAR_LINE}\n\nポーズ：${view}${POSE_DESC[slot] || '指定のポーズ'}\n\n条件：\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・ボクシンググローブは着けたままにしてください（外さないでください）\n${legs}・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
+      return `次のキャラクターのイラストを、指定のポーズで作ってください。\n\n${charLine()}\n\nポーズ：${view}${POSE_DESC[slot] || '指定のポーズ'}\n\n条件：\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・ボクシンググローブは着けたままにしてください（外さないでください）\n${legs}・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
     }
     async function copyPosePrompt(group, slot, done) {
       const text = posePromptText(group, slot);
@@ -71,6 +86,17 @@
       } catch (e) { ok = false; }
       done.textContent = ok ? '人形の画像をコピーしました。AIにそのまま貼り付けられます。' : '画像のコピーができませんでした。';
     }
+    // 作り方の切り替えと、共通の見た目テキストの配線。見た目は上の人形用プロンプトの「キャラクター：」行にも反映する。
+    const descInput = dialog.querySelector('#custom-char-desc'), descWrap = dialog.querySelector('#char-desc-wrap'), descNote = dialog.querySelector('#char-desc-note');
+    for (const radio of dialog.querySelectorAll('input[name="prompt-mode"]')) radio.addEventListener('change', () => {
+      promptMode = radio.value;
+      if (descWrap) descWrap.hidden = promptMode === 'ref';
+      if (descNote) descNote.hidden = promptMode !== 'ref';
+    });
+    if (descInput) descInput.addEventListener('input', () => {
+      charDesc = descInput.value;
+      if (dollText) dollText.value = dollText.value.replace(/^キャラクター：.*$/m, charLine());
+    });
     // 能力ポイントの使用量。数値を変えるたびに計算し直す（保存できるかの判定は X の save 側）。
     function updatePoints() {
       if (!points) return;
