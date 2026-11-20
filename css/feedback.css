@@ -1,0 +1,28 @@
+/* 感想フォーム専用。色とフォントは style.css の変数に合わせる。 */
+.feedback-screen { max-width: 560px; }
+.feedback-title {
+  font-family: var(--display);
+  font-size: 1.6rem;
+  letter-spacing: .04em;
+  margin: 24px 0 8px;
+}
+.feedback-intro { color: var(--muted); margin: 0 0 20px; }
+.feedback-form { display: grid; gap: 16px; }
+.feedback-field { display: grid; gap: 6px; font-weight: 700; }
+.feedback-field select,
+.feedback-field textarea,
+.feedback-field input[type="text"] {
+  font: inherit;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--night-3);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  width: 100%;
+}
+.feedback-field textarea { resize: vertical; }
+.feedback-honey { display: none !important; }
+.feedback-submit { justify-self: start; }
+.feedback-back { margin-top: 28px; }
+.feedback-back a { color: var(--gold); }
