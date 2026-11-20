@@ -32,6 +32,30 @@
       if (!ok) { dollText.focus(); dollText.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } }
       if (dollDone) dollDone.textContent = ok ? 'コピーしました。AIに貼り付けて使ってください。' : 'コピーできませんでした。テキストを選んで手動でコピーしてください。';
     });
+    // ポーズごとのプロンプト。人形があるポーズは人形の絵も置き、絵やボタンからそのポーズ専用の文章をコピーできる。
+    const DOLL_BY_SLOT = { 'side.guard': 'pose_05_side_guard', 'side.jab': 'pose_02_jab', 'side.straight': 'pose_03_straight', 'side.hitFace': 'pose_09_side_hit', 'side.ko': 'pose_06_side_ko', 'front.guard': 'pose_01_guard', 'front.jab': 'pose_08_pov_punch', 'front.hitFace': 'pose_10_pov_hit', 'front.ko': 'pose_07_pov_ko_big', 'special.koBig': 'pose_04_ko' };
+    const NO_STAND = new Set(['side.ko', 'side.koBody', 'side.rest', 'side.restPinch', 'front.ko', 'front.koBody', 'special.koBig', 'special.corner']);
+    const POSE_DESC = { guard: 'ガードの構え', jab: 'ジャブを打つところ', straight: 'ストレートを打つところ', hook: 'フックを打つところ', upper: 'アッパーを打つところ', body: 'ボディブローを打つところ', block: '相手の攻撃をガードするところ', hitFace: '顔にパンチが当たったところ', hitBody: 'お腹にパンチが当たったところ', win: '勝って喜ぶところ', ko: 'ダウンして倒れているところ', pinch: '体力が残り少なく、苦しい表情のところ', rest: 'ラウンド間にコーナーの椅子で休憩するところ', restPinch: '体力が残り少ない状態で、コーナーの椅子で休憩するところ', koBody: 'お腹を押さえてうずくまって倒れているところ', windup: 'パンチを引いて攻撃に移る直前のところ', corner: 'ラウンド間にコーナーの椅子で休憩するところ', koBig: '大の字に倒れているところ' };
+    const CHAR_LINE = 'キャラクター：（ここに自分のキャラの見た目を書いてください。例：黒髪ツインテール、赤い目、青いスポーツウェア、赤いボクシンググローブの元気な女の子）';
+    function posePromptText(group, slot) {
+      const key = group + '.' + slot;
+      const legs = NO_STAND.has(key) ? '' : '・脚は自然な立ち姿にしてください（脚を開きすぎたり、ガニ股になったりしないようにしてください）\n';
+      if (group === 'expression') {
+        return `次のキャラクターの「${X.EXPRESSIONS[slot]}」の表情のイラストを作ってください。試合前の掛け合い用の絵です。\n\n${CHAR_LINE}\n\n条件：\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・表情がよく分かる構図にしてください\n・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
+      }
+      if (DOLL_BY_SLOT[key]) {
+        return `添付した灰色の人形の画像のポーズと構図をそのまま使って、次のキャラクターのイラストを作ってください。\n\n${CHAR_LINE}\n\n条件：\n・ポーズ、体の向き、カメラの角度は人形とまったく同じにしてください\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・ボクシンググローブは着けたままにしてください（外さないでください）\n${legs}・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
+      }
+      const view = group === 'front' ? '正面から見た姿で、' : group === 'special' ? '' : '横向きで、';
+      return `次のキャラクターのイラストを、指定のポーズで作ってください。\n\n${CHAR_LINE}\n\nポーズ：${view}${POSE_DESC[slot] || '指定のポーズ'}\n\n条件：\n・ちびキャラ（2.5頭身くらい）のアニメ風イラストにしてください\n・ボクシンググローブは着けたままにしてください（外さないでください）\n${legs}・背景は単色（白または薄いグレー）にしてください\n・文字やロゴは入れないでください`;
+    }
+    async function copyPosePrompt(group, slot, done) {
+      const text = posePromptText(group, slot);
+      let ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { /* フォールバックへ */ }
+      if (!ok) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } ta.remove(); }
+      done.textContent = ok ? 'コピーしました。AIに貼り付けて使ってください。' : 'コピーできませんでした。';
+    }
     // 能力ポイントの使用量。数値を変えるたびに計算し直す（保存できるかの判定は X の save 側）。
     function updatePoints() {
       if (!points) return;
@@ -41,6 +65,9 @@
       points.classList?.toggle('is-over', over > 0);
     }
     let draft, dirty = false, busy = false;
+    // ファイル選択をキャンセルした直後の Esc 漏れで登録画面が閉じないようにするための時刻メモ。
+    let filePickerAt = 0;
+    const noteFilePicker = () => { filePickerAt = Date.now(); };
     const confirmChange = C.createCustomConfirmation();
     const field = name => form.elements.namedItem(name);
     const message = (value, error = false) => { status.textContent = value; status.classList.toggle('is-error', error); };
@@ -85,6 +112,7 @@
           const badge = document.createElement('span'); badge.className = 'custom-slot-badge' + (info.required ? ' is-required' : ''); badge.textContent = info.required ? '必須（簡易版はこれだけ）' : '任意'; chooser.appendChild(badge);
           const usage = document.createElement('small'); usage.className = 'custom-slot-usage'; usage.textContent = info.usage; chooser.appendChild(usage);
           const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/png,image/jpeg,image/webp'; chooser.appendChild(input); row.appendChild(chooser);
+          input.addEventListener('click', noteFilePicker); input.addEventListener('cancel', noteFilePicker);
           input.addEventListener('change', () => action(async () => {
             const file = input.files[0]; if (!file) return;
             if (file.size > X.LIMIT.imageBytes || !['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) throw Error('PNG・JPEG・WebP、1枚3MiB以下を選んでください');
@@ -98,6 +126,18 @@
           }
           const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'btn btn-ghost btn-sm'; remove.textContent = '画像を外す';
           remove.addEventListener('click', () => { delete draft.images[group][slot]; dirty = true; renderImages(); }); row.appendChild(remove);
+          const promptDone = document.createElement('span'); promptDone.className = 'custom-pose-done'; promptDone.setAttribute('role', 'status'); promptDone.setAttribute('aria-live', 'polite');
+          const promptBox = document.createElement('div'); promptBox.className = 'custom-pose-prompt';
+          const dollFile = DOLL_BY_SLOT[group + '.' + slot];
+          const dollSrc = dollFile ? (window.CBP_DOLLS || {})[dollFile] : null;
+          if (dollSrc) {
+            const dollImg = document.createElement('img'); dollImg.className = 'doll-thumb'; dollImg.src = dollSrc; dollImg.alt = 'ポーズ人形（クリックでプロンプトをコピー）'; dollImg.title = 'クリックでこのポーズのプロンプトをコピー';
+            dollImg.addEventListener('click', () => copyPosePrompt(group, slot, promptDone));
+            promptBox.appendChild(dollImg);
+          }
+          const promptBtn = document.createElement('button'); promptBtn.type = 'button'; promptBtn.className = 'btn btn-ghost btn-sm'; promptBtn.textContent = dollFile ? '人形プロンプトをコピー' : 'このポーズのプロンプトをコピー';
+          promptBtn.addEventListener('click', () => copyPosePrompt(group, slot, promptDone));
+          promptBox.appendChild(promptBtn); promptBox.appendChild(promptDone); row.appendChild(promptBox);
           details.appendChild(row);
         }
         slots.appendChild(details);
@@ -130,7 +170,9 @@
       const a = document.createElement('a'); a.href = url; a.download = 'chibi-boxer-characters-' + new Date().toISOString().slice(0, 10) + '.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
       message('保存済みの全カスタムキャラと画像を書き出しました。未保存の編集は含みません');
     });
-    dialog.querySelector('#custom-import').addEventListener('change', ev => action(async () => {
+    const importInput = dialog.querySelector('#custom-import');
+    importInput.addEventListener('click', noteFilePicker); importInput.addEventListener('cancel', noteFilePicker);
+    importInput.addEventListener('change', ev => action(async () => {
       const file = ev.target.files[0]; ev.target.value = ''; if (!file) return;
       if (dirty && !await confirmChange('未保存の編集を破棄してバックアップを読み込みますか？')) return;
       if (file.size > X.LIMIT.totalBytes * 1.15) throw Error('バックアップは約36MiB以下にしてください');
@@ -138,7 +180,7 @@
     }));
     const close = async () => { if (await canLeave()) dialog.close(); };
     dialog.querySelector('#custom-close').addEventListener('click', close);
-    dialog.addEventListener('cancel', ev => { ev.preventDefault(); close(); });
+    dialog.addEventListener('cancel', ev => { ev.preventDefault(); if (Date.now() - filePickerAt < 1000) return; close(); });
     document.querySelectorAll('[data-open-custom]').forEach(button => button.addEventListener('click', async () => {
       await X.ready; load(''); message(X.error || 'このブラウザ・同じ起動場所に保存します。画像込みのバックアップを定期的に書き出してください', !!X.error); dialog.showModal();
       if (X.error) { lock(true); dialog.querySelector('#custom-close').disabled = false; busy = false; }

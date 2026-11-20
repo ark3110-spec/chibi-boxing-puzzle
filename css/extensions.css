@@ -32,6 +32,10 @@
 .custom-image-row { display: grid; grid-template-columns: 80px minmax(0,1fr) 130px; align-items: center; gap: 10px; padding: 12px 0; }
 .custom-image-row img { width: 80px; height: 75px; object-fit: contain; background: #514763; border-radius: 8px; }
 .custom-image-row button { grid-column: 2 / -1; justify-self: start; }
+.custom-pose-prompt { grid-column: 1 / -1; display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.custom-pose-prompt .doll-thumb { width: 64px; height: 64px; object-fit: contain; background: #514763; border-radius: 8px; cursor: pointer; }
+.custom-pose-prompt button { grid-column: auto; }
+.custom-pose-done { font-size: .85rem; }
 .custom-slot-badge { align-self: flex-start; padding: 2px 7px; border: 1px solid var(--muted); border-radius: 6px; font-size: .75rem; }
 .custom-slot-badge.is-required { border-color: var(--gold); color: var(--gold); font-weight: 900; }
 .custom-slot-usage { line-height: 1.5; }
