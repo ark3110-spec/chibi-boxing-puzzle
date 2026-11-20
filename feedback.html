@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>感想フォーム | ちびキャラボクシング～パズル編～</title>
+  <meta name="theme-color" content="#1d1830">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/feedback.css">
+</head>
+<body>
+<main class="screen feedback-screen">
+  <h1 class="feedback-title">感想フォーム</h1>
+  <p class="feedback-intro">感想は作者に届きます。お名前は任意です。</p>
+  <form class="feedback-form" method="POST" action="https://formsubmit.co/khione-hion@muse.ai">
+    <input type="hidden" name="_subject" value="ちびパズル感想">
+    <input type="hidden" name="_next" value="https://ark3110-spec.github.io/chibi-boxing-puzzle/thanks.html">
+    <input type="text" name="_honey" class="feedback-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <label class="feedback-field">カテゴリ
+      <select name="カテゴリ" required>
+        <option value="">選んでください</option>
+        <option value="たのしかった・よかった">たのしかった・よかった</option>
+        <option value="ここが気になった">ここが気になった</option>
+        <option value="その他">その他</option>
+      </select>
+    </label>
+    <label class="feedback-field">感想
+      <textarea name="感想" rows="6" required placeholder="遊んでみた感想を書いてください"></textarea>
+    </label>
+    <label class="feedback-field">お名前（任意）
+      <input type="text" name="名前" placeholder="空欄なら匿名になります">
+    </label>
+    <button class="btn btn-gong feedback-submit" type="submit">送信する</button>
+  </form>
+  <p class="feedback-back"><a href="index.html">← ゲームに戻る</a></p>
+</main>
+</body>
+</html>
